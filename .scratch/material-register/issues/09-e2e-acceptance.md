@@ -6,7 +6,7 @@
 
 **Status:** done (re-run 2026-11-18 against the redesigned UI)
 
-> **Amended 2026-11-18.** The UI was redesigned and gained a detail route and a not-found page (ticket 10). The default page size is now 10, and there is no test DB or faster-search extra. The e2e pass is re-run with the updated brief (`.scratch/material-register/e2e/brief.md`). The first run's report and screenshots are archived in `.scratch/material-register/e2e/archive/2026-11-17/`.
+> **Amended 2026-11-18.** The UI was redesigned and gained a detail route and a not-found page (ticket 10). The default page size is now 10, and there is no test DB or faster-search extra. The e2e pass is re-run with the updated brief (`.scratch/material-register/e2e/brief.md`). The first run's report and screenshots were replaced by the re-run (they remain in git history, e.g. commit `f4d5fff`).
 
 - [x] Stack started from the README quickstart on a freshly set-up database
 - [x] Subagent runs on the Sonnet model, launched in a new Herdr pane per the user's environment rules (HERDR_ENV=1), using the ego-browser skill
