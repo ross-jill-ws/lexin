@@ -165,32 +165,32 @@ pnpm --filter @material-register/frontend exec vitest run test/routing.test.tsx 
 - **Frontend** (`apps/frontend/test`): the Materials page rendered at a URL with React Testing Library; MSW fakes the API and fails on unhandled requests. Covers URL ↔ state, debounced search, filters and Clear all, sorting, paging, the loading, empty and error states, and routing (detail page, not-found page).
 - Everything was written test-first (red → green), slice by slice.
 
-## What's next
+## What I'd improve with more time
 
-- **Keyset (cursor) pagination** for deep pages and stability under concurrent writes, keeping offset only for small "jump to page" ranges.
-- **Manufacturer filter** in the UI (API and index already in place; recipe in `CLAUDE.md`).
-- **Natural-language filters**: "active SKF bearings at Brisbane" → an LLM turns the sentence into the existing validated query object, so the shared schema stays the guardrail.
-- **Editing a material** from its detail page.
-- **API tests against a seeded database** in CI (a Postgres service container), plus lint, typecheck and the browser e2e pass on every PR.
-- Smaller items: total counts get expensive on large, unselective result sets (consider estimates beyond a threshold); trigram (`pg_trgm`) indexes once the catalogue grows past what a sequential scan handles comfortably; a tsvector or similarity ranking if relevance ordering is wanted; SAP sync.
+- **Natural-language filters:** turn "active SKF bearings at Brisbane" into the existing validated query object with an LLM, so the shared Zod schema stays the guardrail.
+- **Faster search with `pg_trgm`:** trigram GIN indexes on material number, description and MPN, so `ILIKE '%term%'` stays fast as the catalogue grows.
 
 ## How AI tools were used
 
-> Draft written from the project record. Sections marked _TODO (author)_ are for my own notes.
+**Tools:** Claude Code (Opus 5.5), with these skills:
 
-This project was built with Claude Code following a deliberate, documented process. The artefacts are in `.scratch/material-register/` (`spec.md` and `issues/01`–`09`).
+- **ego-lite browser skill** ([citrolabs/ego-lite](https://github.com/citrolabs/ego-lite)): a Sonnet subagent drove the running app in a real browser for end-to-end acceptance tests and screenshots.
+- **Matt Pocock's skills** ([mattpocock/skills](https://github.com/mattpocock/skills)):
+  - grilling the brief;
+  - writing the spec and tickets (`.scratch/material-register/`);
+  - test-first implementation.
 
-1. **Grilling.** Before any code, Claude interviewed me relentlessly about the brief (the `grilling` skill): scope, the stack, how search should behave (trigram vs full-text), offset vs keyset pagination, URL state, test seams, and which optional extra to pick (faster search at first; it was later dropped in favour of the detail view, since the brief allows one). The answers became decisions rather than assumptions.
-2. **Spec.** The decisions were written up as `spec.md`: problem, 69 user stories, implementation decisions, testing decisions (which seams, and why) and what is out of scope.
-3. **Tickets.** The spec was split into nine vertical-slice tickets with explicit "blocked by" dependencies and acceptance checklists. First a walking skeleton, then seed, pagination with URL state, sorting, search, filters, UI states, docs, and finally browser e2e.
-4. **Workflow implementation, test-first.** A workflow implemented the tickets in blocking order, each by a fresh agent following strict TDD (red → green) at the agreed seams: the HTTP API against a real Postgres test database (later removed to keep one database), and the Materials page via React Testing Library + MSW. Each agent ticked only the criteria it actually met and recorded deviations in the ticket's Comments (for example, the extra generator seam in ticket 02, and dependency version pins in ticket 01).
-5. **Code review.** The implemented work is reviewed along two axes: the repo's standards, and fidelity to the spec and tickets. _TODO (author): note what the review found and what changed as a result._
-6. **Browser e2e.** A Sonnet subagent drives the running app through the ego-browser skill (ticket 09): search, each filter, sorting, paging, URL restore, back/forward, empty and error states. Defects found there get regression tests at the right seam. _TODO (author): summarise the e2e findings once ticket 09 has run._
+**What worked:** grilling before coding turned assumptions into explicit decisions. The spec and tickets kept every agent on the same contract, and an independent browser tester caught bugs that the unit tests missed.
 
-What worked well: _TODO (author): e.g. where the grilling changed your mind, how much the spec and tickets kept agents on track._
+**What I had to correct:**
 
-Where I stepped in or corrected the AI: _TODO (author): concrete examples of output you rejected, rewrote or simplified, and why._
+- **E2E failures.** The browser tests found two failures:
+  - the Plant filter stayed empty after recovering from a backend outage;
+  - after the redesign, filter pills were clipped and narrow screens gave no hint that the table scrolls.
 
-What I verified myself: _TODO (author): what you read line by line, ran by hand or checked in the browser._
-
-What I'd do differently: _TODO (author)._
+  Neither was fixed automatically. Each took an extra prompt to fix test-first and re-verify in the browser.
+- **UI refactoring.** The first UI was functional but generic, and it was routing-thin: a single `/` route, and React Router's raw error screen for unknown URLs. I directed a redesign:
+  - a design system;
+  - 10 rows per page, so the table fits the screen;
+  - a material detail route (`/materials/:materialNumber`);
+  - a styled not-found page.
