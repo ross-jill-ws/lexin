@@ -6,6 +6,8 @@
 
 **Status:** done
 
+> **Amended 2026-11-18.** Superseded parts: there is no test database any more (no `lexin_test`, no `docker/init-db.sql`, no `TEST_DATABASE_URL`/`NODE_ENV` in env), the backend HTTP-seam harness (globalSetup, fixtures, truncation) and its tests were removed, and the init migration was regenerated without `pg_trgm` or trigram indexes. The default page size is now 10. The healthcheck waits for `lexin`.
+
 - [x] pnpm workspaces monorepo with backend, frontend and shared packages; Biome configured; `lint` passes
 - [x] Docker Compose runs Postgres 17 on host port 5433 with a healthcheck and named volume; an init script creates the app DB and the test DB; `db:up` waits until healthy
 - [x] Example env file committed; backend validates env with Zod at startup and fails fast with a readable message

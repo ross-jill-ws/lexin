@@ -1,10 +1,10 @@
-# 08 — Trigram benchmark + docs
+# 08 — Docs (trigram benchmark superseded)
 
 **What to build:** A reviewer can run a benchmark that shows, with real numbers, how much the trigram indexes speed up search. They can then read a README that takes them from clone to a running app in a few commands and explains the architecture, trade-offs, next steps and how AI tools were used. CLAUDE.md gives agents the context to make changes, including a step-by-step recipe for adding a filter.
 
 **Blocked by:** 02 — Realistic seed; 05 — Debounced search
 
-**Status:** done
+**Status:** done (benchmark part superseded 2026-11-18; see Comments)
 
 - [x] `db:bench` creates/uses a separate bench database, migrates it, generates about 200k rows with the ticket 02 generator, and runs EXPLAIN ANALYZE on representative searches (material number fragment, description word, MPN fragment) with the trigram indexes, then without them (dropped or disabled), printing a comparison
 - [x] The benchmark leaves the main and test databases untouched

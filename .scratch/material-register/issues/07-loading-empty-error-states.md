@@ -6,6 +6,8 @@
 
 **Status:** done
 
+> **Amended 2026-11-18.** The backend error-shape tests were removed with the test database; the frontend state tests remain. The states were restyled in the redesign (ticket 10).
+
 - [x] Skeleton table on first load (no data yet)
 - [x] Previous data kept while refetching (TanStack Query keep-previous-data) with a subtle loading overlay; the table doesn't jump
 - [x] Empty state component ("No materials match") with a Clear all action when there are no results

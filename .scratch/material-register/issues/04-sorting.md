@@ -6,6 +6,8 @@
 
 **Status:** done
 
+> **Amended 2026-11-18.** The backend HTTP-seam sorting tests were removed with the test database; the frontend page tests remain. Sort indicators are now ↑/↓ arrows in the redesigned header.
+
 - [x] Shared query schema adds `sort` (materialNumber, description, materialType, status, plant, manufacturer, unitPrice, quantityOnHand, updatedAt; default updatedAt) and `order` (asc/desc; default desc)
 - [x] API orders in the database by the chosen column (plant sorts by plant code, manufacturer by manufacturer name), always appending id as a tiebreaker
 - [x] Invalid sort or order returns 400 with issues

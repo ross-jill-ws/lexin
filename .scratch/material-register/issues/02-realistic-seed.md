@@ -6,6 +6,8 @@
 
 **Status:** done
 
+> **Amended 2026-11-18.** `test/seed.test.ts` (the HTTP-seam check against `lexin_test`) was removed with the test database; `test/seed-generator.test.ts` remains. The benchmark that reused the generator is gone; the seed CLI still takes `--count` and `--database-url`.
+
 - [x] Seed uses Faker with a fixed seed combined with curated domain catalogues: category templates tied to plausible manufacturers, material types, units of measure, price ranges and realistic MPN formats (e.g. SKF deep groove ball bearings with MPN like 6205-2RS1, Gates V-belts, Parker hydraulics, Loctite/Mobil consumables, steel plate raw materials)
 - [x] About 8 plants (1000 Brisbane, 1100 Gladstone, 1200 Mackay, 2000 Sydney, 2100 Newcastle, 3000 Melbourne, 4000 Perth, 4100 Kalgoorlie) and about 25 manufacturers
 - [x] 5,000 materials numbered MAT-000001 to MAT-005000

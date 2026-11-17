@@ -6,6 +6,8 @@
 
 **Status:** done
 
+> **Amended 2026-11-18.** The default page size changed from 25 to 10 so one page fits the screen without a scrollbar. The backend HTTP-seam tests listed below were removed with the test database; the frontend page tests remain (updated for the 10-row default).
+
 - [x] Shared materials query schema defines `page` (positive integer, default 1) and `pageSize` (one of 10, 25, 50, 100, default 25), with coercion from query strings
 - [x] API validates these via the Zod validator; invalid values return 400 `VALIDATION_ERROR` with field-level issues in the shared error shape
 - [x] Pagination happens in the database (LIMIT/OFFSET plus a total count); `total` and `totalPages` are correct

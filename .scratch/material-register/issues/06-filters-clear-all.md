@@ -6,6 +6,8 @@
 
 **Status:** done
 
+> **Amended 2026-11-18.** The backend HTTP-seam filter tests were removed with the test database; the frontend page tests remain.
+
 - [x] `GET /api/plants` returns all plants (id, code, name) ordered by code
 - [x] Shared query schema adds `type`, `status` (enum values) and `plant` (plant codes) as optional comma-separated multi-value lists; unknown values return 400 with issues
 - [x] API filters in the database: AND across filters, IN within a filter, combined with search

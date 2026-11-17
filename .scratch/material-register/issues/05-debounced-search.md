@@ -6,6 +6,8 @@
 
 **Status:** done
 
+> **Amended 2026-11-18.** Search is plain `ILIKE '%term%'` with **no** index: the trigram GIN indexes and `pg_trgm` were dropped with the "faster search" extra. `test/materials-search.test.ts` (backend, 23 tests) was removed with the test database; escaping and the control-character rule are now covered by `curl` checks and the e2e pass.
+
 - [x] Shared query schema adds `q`: optional, trimmed, 1–100 characters (empty after trimming means no search); over 100 returns 400 with issues
 - [x] API matches with case-insensitive substring (ILIKE), OR'd across material number, description and MPN, served by the trigram indexes
 - [x] `%`, `_` and `\` in the term are escaped and matched literally
