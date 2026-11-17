@@ -2,7 +2,7 @@ import { Group, UnstyledButton } from "@mantine/core";
 import type { SortDirection } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 
-const arrows: Record<SortDirection, string> = { asc: "▲", desc: "▼" };
+const arrows: Record<SortDirection, string> = { asc: "↑", desc: "↓" };
 
 type Props = { label: ReactNode; direction: SortDirection | false; onToggle: () => void };
 
@@ -13,7 +13,7 @@ export function SortableHeader({ label, direction, onToggle }: Props) {
       <Group gap={4} wrap="nowrap" component="span">
         {label}
         {direction && (
-          <span aria-hidden="true" style={{ fontSize: "0.7em" }}>
+          <span aria-hidden="true" style={{ color: "var(--mr-wait)", fontSize: "1.2em" }}>
             {arrows[direction]}
           </span>
         )}

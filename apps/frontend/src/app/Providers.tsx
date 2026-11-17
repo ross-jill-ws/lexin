@@ -1,7 +1,9 @@
 import "@mantine/core/styles.css";
+import "./tokens.css";
 import { MantineProvider, type MantineProviderProps } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
+import { theme } from "./theme";
 
 /**
  * The app's query client. Failed requests aren't retried: the error state and its Retry button
@@ -25,7 +27,7 @@ export function Providers({
   env?: MantineProviderProps["env"];
 }) {
   return (
-    <MantineProvider env={env}>
+    <MantineProvider theme={theme} defaultColorScheme="light" env={env}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </MantineProvider>
   );

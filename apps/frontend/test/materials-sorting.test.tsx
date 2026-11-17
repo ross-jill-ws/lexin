@@ -33,7 +33,7 @@ function serveMaterials() {
       const params = new URL(request.url).searchParams;
       requests.push(params.toString());
       const page = Number(params.get("page") ?? 1);
-      const pageSize = Number(params.get("pageSize") ?? 25);
+      const pageSize = Number(params.get("pageSize") ?? 10);
       const ordered = params.get("order") === "asc" ? all : [...all].reverse();
       const body: MaterialsResponse = {
         data: ordered.slice((page - 1) * pageSize, page * pageSize),
@@ -61,7 +61,7 @@ describe("Materials page sorting", () => {
     await screen.findByRole("cell", { name: "MAT-000060" });
     expect(header("Last updated")).toHaveAttribute("aria-sort", "descending");
     expect(header("Material #")).toHaveAttribute("aria-sort", "none");
-    expect(requests).toEqual(["sort=updatedAt&order=desc&page=1&pageSize=25"]);
+    expect(requests).toEqual(["sort=updatedAt&order=desc&page=1&pageSize=10"]);
   });
 
   it("makes every sortable header clickable and leaves the others plain", async () => {
@@ -99,7 +99,7 @@ describe("Materials page sorting", () => {
 
     expect(await screen.findByRole("cell", { name: "MAT-000001" })).toBeInTheDocument();
     expect(search(router)).toBe("?sort=materialNumber&order=asc");
-    expect(requests.at(-1)).toBe("sort=materialNumber&order=asc&page=1&pageSize=25");
+    expect(requests.at(-1)).toBe("sort=materialNumber&order=asc&page=1&pageSize=10");
     expect(header("Material #")).toHaveAttribute("aria-sort", "ascending");
     expect(header("Last updated")).toHaveAttribute("aria-sort", "none");
 
@@ -107,7 +107,7 @@ describe("Materials page sorting", () => {
 
     expect(await screen.findByRole("cell", { name: "MAT-000060" })).toBeInTheDocument();
     expect(search(router)).toBe("?sort=materialNumber");
-    expect(requests.at(-1)).toBe("sort=materialNumber&order=desc&page=1&pageSize=25");
+    expect(requests.at(-1)).toBe("sort=materialNumber&order=desc&page=1&pageSize=10");
     expect(header("Material #")).toHaveAttribute("aria-sort", "descending");
 
     await user.click(sortButton("Material #"));
@@ -131,13 +131,13 @@ describe("Materials page sorting", () => {
   it("returns to page 1 when the sort changes", async () => {
     const requests = serveMaterials();
     const user = userEvent.setup();
-    const { router } = renderAt("/?page=2&pageSize=10");
+    const { router } = renderAt("/?page=2");
     await screen.findByRole("cell", { name: "MAT-000050" });
 
     await user.click(sortButton("Plant"));
 
     expect(await screen.findByRole("cell", { name: "MAT-000001" })).toBeInTheDocument();
-    expect(search(router)).toBe("?sort=plant&order=asc&pageSize=10");
+    expect(search(router)).toBe("?sort=plant&order=asc");
     expect(requests.at(-1)).toBe("sort=plant&order=asc&page=1&pageSize=10");
   });
 
@@ -148,7 +148,7 @@ describe("Materials page sorting", () => {
 
     expect(await screen.findByRole("cell", { name: "MAT-000001" })).toBeInTheDocument();
     expect(header("Unit price")).toHaveAttribute("aria-sort", "ascending");
-    expect(requests).toEqual(["sort=unitPrice&order=asc&page=1&pageSize=25"]);
+    expect(requests).toEqual(["sort=unitPrice&order=asc&page=1&pageSize=10"]);
   });
 
   it("falls back to the default sort for a malformed sort or order in the URL", async () => {
@@ -158,7 +158,7 @@ describe("Materials page sorting", () => {
 
     await screen.findByRole("cell", { name: "MAT-000060" });
     expect(header("Last updated")).toHaveAttribute("aria-sort", "descending");
-    expect(requests).toEqual(["sort=updatedAt&order=desc&page=1&pageSize=25"]);
+    expect(requests).toEqual(["sort=updatedAt&order=desc&page=1&pageSize=10"]);
   });
 
   it("restores the previous sort with the back button", async () => {

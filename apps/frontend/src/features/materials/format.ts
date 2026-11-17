@@ -25,3 +25,13 @@ export const materialStatusLabels: Record<MaterialStatus, string> = {
   OBSOLETE: "Obsolete",
   PENDING_REVIEW: "Pending Review",
 };
+
+/**
+ * Quantity × unit price, worked in whole cents with BigInt so the decimal price stays exact.
+ * Intl formats the resulting decimal string without going through a float.
+ */
+export function formatStockValue(unitPrice: string, quantity: number) {
+  const cents = BigInt(unitPrice.replace(".", "")) * BigInt(quantity);
+  const decimal = `${cents / 100n}.${String(cents % 100n).padStart(2, "0")}`;
+  return currency.format(decimal as Intl.StringNumericLiteral);
+}

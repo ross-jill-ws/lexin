@@ -2,6 +2,7 @@ import {
   type ApiError,
   apiErrorSchema,
   type MaterialsQuery,
+  materialSchema,
   materialsResponseSchema,
   plantsResponseSchema,
 } from "@material-register/shared";
@@ -57,5 +58,7 @@ async function getJson<T extends z.ZodType>(path: string, schema: T): Promise<z.
 export const api = {
   listMaterials: (query: MaterialsQuery) =>
     getJson(`/api/materials?${toQueryString(query)}`, materialsResponseSchema),
+  getMaterial: (materialNumber: string) =>
+    getJson(`/api/materials/${encodeURIComponent(materialNumber)}`, materialSchema),
   listPlants: () => getJson("/api/plants", plantsResponseSchema),
 };

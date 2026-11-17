@@ -22,7 +22,7 @@ const material = (n: number): Material => ({
 });
 
 /** A page of the API's response over `total` materials. */
-function pageOf(total: number, page = 1, pageSize = 25): MaterialsResponse {
+function pageOf(total: number, page = 1, pageSize = 10): MaterialsResponse {
   const all = Array.from({ length: total }, (_, i) => material(i + 1));
   return {
     data: all.slice((page - 1) * pageSize, page * pageSize),
@@ -85,7 +85,7 @@ describe("Materials page loading, empty and error states", () => {
 
     nextPage.release(HttpResponse.json(pageOf(60, 2)));
 
-    expect(await screen.findByRole("cell", { name: "MAT-000026" })).toBeInTheDocument();
+    expect(await screen.findByRole("cell", { name: "MAT-000011" })).toBeInTheDocument();
     expect(screen.queryByRole("cell", { name: "MAT-000001" })).not.toBeInTheDocument();
     expect(screen.queryByRole("status", { name: "Loading materials" })).not.toBeInTheDocument();
   });

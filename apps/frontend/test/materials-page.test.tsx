@@ -33,7 +33,7 @@ function mockMaterials(data: Material[]) {
   const body: MaterialsResponse = {
     data,
     page: 1,
-    pageSize: 25,
+    pageSize: 10,
     total: data.length,
     totalPages: 1,
   };

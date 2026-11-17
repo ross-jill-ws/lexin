@@ -32,7 +32,9 @@ export function MultiSelectFilter<Value extends string>({
         "aria-hidden": false,
         tabIndex: 0,
       }}
-      w={240}
+      w={230}
+      // One line of pills, however many are picked, so the toolbar never grows taller.
+      styles={{ pillsList: { flexWrap: "nowrap", overflow: "hidden" } }}
     />
   );
 }

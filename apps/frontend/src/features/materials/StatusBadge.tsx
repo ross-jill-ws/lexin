@@ -1,17 +1,12 @@
-import { Badge } from "@mantine/core";
 import type { MaterialStatus } from "@material-register/shared";
 import { materialStatusLabels } from "./format";
+import classes from "./StatusBadge.module.css";
 
-const colors: Record<MaterialStatus, string> = {
-  ACTIVE: "green",
-  OBSOLETE: "red",
-  PENDING_REVIEW: "yellow",
-};
-
+/** A status lamp: a coloured indicator plus the label, never truncated. */
 export function StatusBadge({ status }: { status: MaterialStatus }) {
   return (
-    <Badge color={colors[status]} variant="light">
+    <span className={classes.status} data-status={status}>
       {materialStatusLabels[status]}
-    </Badge>
+    </span>
   );
 }

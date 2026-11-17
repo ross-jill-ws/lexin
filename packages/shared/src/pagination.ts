@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const PAGE_SIZES = [10, 25, 50, 100] as const;
 export const DEFAULT_PAGE = 1;
-export const DEFAULT_PAGE_SIZE = 25;
+export const DEFAULT_PAGE_SIZE = 10;
 
 export type PageSize = (typeof PAGE_SIZES)[number];
 

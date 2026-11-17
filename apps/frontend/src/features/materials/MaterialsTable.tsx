@@ -9,11 +9,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { materialColumns } from "./columns";
+import classes from "./MaterialsTable.module.css";
 import { SortableHeader } from "./SortableHeader";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
     align?: "left" | "right";
+    /** Fixed column width in px; columns without one share the remaining space. */
+    width?: number;
   }
 }
 
@@ -22,6 +25,9 @@ type Sort = Pick<MaterialsQuery, "sort" | "order">;
 type Props = { materials: Material[]; sort: Sort; onSortChange: (sort: Sort) => void };
 
 const ariaSort = { asc: "ascending", desc: "descending" } as const;
+
+/** Below this width the table scrolls sideways rather than squeezing the description. */
+export const TABLE_MIN_WIDTH = 1240;
 
 /**
  * Headless TanStack Table for column definitions; Mantine renders the markup. Sorting is
@@ -52,8 +58,8 @@ export function MaterialsTable({ materials, sort, onSortChange }: Props) {
   });
 
   return (
-    <Table.ScrollContainer minWidth={1100}>
-      <Table striped highlightOnHover>
+    <Table.ScrollContainer minWidth={TABLE_MIN_WIDTH}>
+      <Table className={classes.table} verticalSpacing={0} horizontalSpacing="sm">
         <Table.Thead>
           {table.getHeaderGroups().map((group) => (
             <Table.Tr key={group.id}>
@@ -86,6 +92,7 @@ function HeaderCell({ header }: { header: Header<Material, unknown> }) {
   return (
     <Table.Th
       ta={column.columnDef.meta?.align}
+      w={column.columnDef.meta?.width}
       aria-sort={column.getCanSort() ? (direction ? ariaSort[direction] : "none") : undefined}
     >
       {column.getCanSort() ? (

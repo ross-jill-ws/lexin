@@ -1,0 +1,70 @@
+.heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.eyebrow {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mr-ink-soft);
+}
+
+.title {
+  font-size: 40px;
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.count {
+  font-family: var(--mantine-font-family-headings);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
+  border: 2px solid var(--mr-ink);
+  background: var(--mr-sheet);
+  box-shadow: 3px 3px 0 var(--mr-amber);
+}
+
+.sheet {
+  background: var(--mr-sheet);
+  border: 1px solid var(--mr-rule);
+  box-shadow: var(--mr-shadow);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--mr-rule);
+}
+
+.results {
+  min-height: 458px;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--mr-rule);
+  background: #f8f4ec;
+}
+
+.range {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 12px;
+  color: var(--mr-ink-soft);
+}

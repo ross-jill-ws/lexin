@@ -60,29 +60,50 @@ function whereCondition({ q, type, status, plant }: MaterialsQuery): SQL | undef
   );
 }
 
-/** Turns a validated query into one page of materials. All materials SQL lives here. */
+/** The columns of a Material as the API returns it, with plant and manufacturer nested. */
+const materialColumns = {
+  id: materials.id,
+  materialNumber: materials.materialNumber,
+  description: materials.description,
+  materialType: materials.materialType,
+  manufacturer: { name: manufacturers.name },
+  manufacturerPartNumber: materials.manufacturerPartNumber,
+  plant: { code: plants.code, name: plants.name },
+  status: materials.status,
+  unitOfMeasure: materials.unitOfMeasure,
+  unitPrice: materials.unitPrice,
+  quantityOnHand: materials.quantityOnHand,
+  updatedAt: materials.updatedAt,
+};
+
+type MaterialRow = Omit<Material, "updatedAt"> & { updatedAt: Date };
+const toMaterial = (row: MaterialRow): Material => ({
+  ...row,
+  updatedAt: row.updatedAt.toISOString(),
+});
+
+/** Reads materials for the API. All materials SQL lives here. */
 export function createMaterialsRepository(db: Db) {
   return {
+    /** One material by number. Numbers are stored upper-case, so the unique index still serves. */
+    async findByNumber(materialNumber: string): Promise<Material | undefined> {
+      const [row] = await db
+        .select(materialColumns)
+        .from(materials)
+        .innerJoin(plants, eq(materials.plantId, plants.id))
+        .innerJoin(manufacturers, eq(materials.manufacturerId, manufacturers.id))
+        .where(eq(materials.materialNumber, materialNumber.trim().toUpperCase()))
+        .limit(1);
+      return row && toMaterial(row);
+    },
+
     async list(query: MaterialsQuery): Promise<MaterialsResponse> {
       const { sort, order, page, pageSize } = query;
       const direction = order === "asc" ? asc : desc;
       const where = whereCondition(query);
       const [rows, [totals]] = await Promise.all([
         db
-          .select({
-            id: materials.id,
-            materialNumber: materials.materialNumber,
-            description: materials.description,
-            materialType: materials.materialType,
-            manufacturer: { name: manufacturers.name },
-            manufacturerPartNumber: materials.manufacturerPartNumber,
-            plant: { code: plants.code, name: plants.name },
-            status: materials.status,
-            unitOfMeasure: materials.unitOfMeasure,
-            unitPrice: materials.unitPrice,
-            quantityOnHand: materials.quantityOnHand,
-            updatedAt: materials.updatedAt,
-          })
+          .select(materialColumns)
           .from(materials)
           .innerJoin(plants, eq(materials.plantId, plants.id))
           .innerJoin(manufacturers, eq(materials.manufacturerId, manufacturers.id))
@@ -101,7 +122,7 @@ export function createMaterialsRepository(db: Db) {
 
       const total = totals?.total ?? 0;
       return {
-        data: rows.map((row): Material => ({ ...row, updatedAt: row.updatedAt.toISOString() })),
+        data: rows.map(toMaterial),
         page,
         pageSize,
         total,

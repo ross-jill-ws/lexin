@@ -17,8 +17,8 @@ describe("seedDatabase", () => {
     await seedDatabase(env.TEST_DATABASE_URL);
 
     const body = await firstPage();
-    expect(body).toMatchObject({ total: 5000, totalPages: 200 });
-    expect(body.data).toHaveLength(25);
+    expect(body).toMatchObject({ total: 5000, totalPages: 500 });
+    expect(body.data).toHaveLength(10);
     expect(body.data[0]?.materialNumber).toMatch(/^MAT-00\d{4}$/);
   });
 

@@ -35,7 +35,7 @@ describe("GET /api/materials", () => {
 
     expect(res.status).toBe(200);
     const body = materialsResponseSchema.parse(await res.json());
-    expect(body).toMatchObject({ page: 1, pageSize: 25, total: 3, totalPages: 1 });
+    expect(body).toMatchObject({ page: 1, pageSize: 10, total: 3, totalPages: 1 });
     expect(body.data.map((m) => m.materialNumber)).toEqual([
       "MAT-000003",
       "MAT-000002",
@@ -57,7 +57,7 @@ describe("GET /api/materials", () => {
     });
   });
 
-  it("returns at most 25 materials on page 1 with the correct totals", async () => {
+  it("returns at most 10 materials on page 1 with the correct totals", async () => {
     const plant = await insertPlant();
     const manufacturer = await insertManufacturer();
     for (let i = 0; i < 30; i++) {
@@ -67,8 +67,8 @@ describe("GET /api/materials", () => {
     const res = await app.request("/api/materials");
     const body = materialsResponseSchema.parse(await res.json());
 
-    expect(body.data).toHaveLength(25);
-    expect(body).toMatchObject({ page: 1, pageSize: 25, total: 30, totalPages: 2 });
+    expect(body.data).toHaveLength(10);
+    expect(body).toMatchObject({ page: 1, pageSize: 10, total: 30, totalPages: 3 });
   });
 
   describe("pagination", () => {
@@ -136,7 +136,7 @@ describe("GET /api/materials", () => {
     it("reports zero pages when there are no materials", async () => {
       const body = await getPage("");
 
-      expect(body).toEqual({ data: [], page: 1, pageSize: 25, total: 0, totalPages: 0 });
+      expect(body).toEqual({ data: [], page: 1, pageSize: 10, total: 0, totalPages: 0 });
     });
 
     it.each([

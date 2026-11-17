@@ -54,7 +54,12 @@ export function SearchInput({ value, onChange }: Props) {
       onChange={(event) => handleChange(event.currentTarget.value)}
       error={term.error?.issues[0]?.message}
       rightSection={text && <CloseButton aria-label="Clear search" onClick={clear} />}
-      w={360}
+      w={340}
+      leftSection={
+        <span aria-hidden="true" style={{ fontFamily: "var(--mantine-font-family-monospace)" }}>
+          ⌕
+        </span>
+      }
     />
   );
 }

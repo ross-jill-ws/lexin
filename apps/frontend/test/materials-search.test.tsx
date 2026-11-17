@@ -37,7 +37,7 @@ function serveMaterials() {
       const q = params.get("q")?.toLowerCase() ?? "";
       const matches = all.filter((m) => m.description.toLowerCase().includes(q));
       const page = Number(params.get("page") ?? 1);
-      const pageSize = Number(params.get("pageSize") ?? 25);
+      const pageSize = Number(params.get("pageSize") ?? 10);
       const body: MaterialsResponse = {
         data: matches.slice((page - 1) * pageSize, page * pageSize),
         page,
@@ -53,7 +53,7 @@ function serveMaterials() {
 
 const searchBox = () => screen.getByRole("textbox", { name: "Search materials" });
 const search = (router: ReturnType<typeof renderAt>["router"]) => router.state.location.search;
-const DEFAULT_REQUEST = "sort=updatedAt&order=desc&page=1&pageSize=25";
+const DEFAULT_REQUEST = "sort=updatedAt&order=desc&page=1&pageSize=10";
 
 describe("Materials page search", () => {
   it("sends one request after a burst of typing, and puts the term in the URL", async () => {
@@ -88,7 +88,7 @@ describe("Materials page search", () => {
   it("returns to page 1 when the search changes", async () => {
     const requests = serveMaterials();
     const user = userEvent.setup();
-    const { router } = renderAt("/?page=2&pageSize=10");
+    const { router } = renderAt("/?page=2");
     await screen.findByRole("cell", { name: "Bearing 11" });
 
     await user.type(searchBox(), "bearing");
@@ -96,19 +96,19 @@ describe("Materials page search", () => {
     await waitFor(() =>
       expect(requests.at(-1)).toBe("q=bearing&sort=updatedAt&order=desc&page=1&pageSize=10"),
     );
-    expect(search(router)).toBe("?q=bearing&pageSize=10");
+    expect(search(router)).toBe("?q=bearing");
   });
 
   it("keeps the page when typing does not change the term", async () => {
     const requests = serveMaterials();
     const user = userEvent.setup();
-    const { router } = renderAt("/?q=bearing&page=2&pageSize=10");
+    const { router } = renderAt("/?q=bearing&page=2");
     await screen.findByRole("cell", { name: "Bearing 21" });
 
     await user.type(searchBox(), " ");
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    expect(search(router)).toBe("?q=bearing&page=2&pageSize=10");
+    expect(search(router)).toBe("?q=bearing&page=2");
     expect(requests).toHaveLength(1);
   });
 
@@ -125,15 +125,15 @@ describe("Materials page search", () => {
   it("clears the search with the × control", async () => {
     const requests = serveMaterials();
     const user = userEvent.setup();
-    const { router } = renderAt("/?q=seal&page=2&pageSize=10");
+    const { router } = renderAt("/?q=seal&page=2&pageSize=25");
     await screen.findByText("20 materials");
 
     await user.click(screen.getByRole("button", { name: "Clear search" }));
 
     expect(await screen.findByText("40 materials")).toBeInTheDocument();
     expect(searchBox()).toHaveValue("");
-    expect(search(router)).toBe("?pageSize=10");
-    expect(requests.at(-1)).toBe("sort=updatedAt&order=desc&page=1&pageSize=10");
+    expect(search(router)).toBe("?pageSize=25");
+    expect(requests.at(-1)).toBe("sort=updatedAt&order=desc&page=1&pageSize=25");
     expect(screen.queryByRole("button", { name: "Clear search" })).not.toBeInTheDocument();
   });
 

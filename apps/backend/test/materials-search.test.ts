@@ -115,7 +115,7 @@ describe("GET /api/materials search", () => {
     expect(materialsResponseSchema.parse(await res.json())).toEqual({
       data: [],
       page: 1,
-      pageSize: 25,
+      pageSize: 10,
       total: 0,
       totalPages: 0,
     });

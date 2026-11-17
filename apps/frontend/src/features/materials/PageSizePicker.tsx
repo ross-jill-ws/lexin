@@ -9,10 +9,14 @@ export function PageSizePicker({ value, onChange }: Props) {
   return (
     <NativeSelect
       label="Rows per page"
+      size="xs"
+      styles={{
+        root: { display: "flex", alignItems: "center", gap: 8 },
+        label: { marginBottom: 0 },
+      }}
       data={options}
       value={String(value)}
       onChange={(event) => onChange(paginationQueryShape.pageSize.parse(event.currentTarget.value))}
-      w={120}
     />
   );
 }

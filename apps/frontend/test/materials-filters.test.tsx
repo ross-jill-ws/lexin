@@ -59,7 +59,7 @@ function serveApi() {
           (!plantCodes || plantCodes.includes(m.plant.code)),
       );
       const page = Number(params.get("page") ?? 1);
-      const pageSize = Number(params.get("pageSize") ?? 25);
+      const pageSize = Number(params.get("pageSize") ?? 10);
       const body: MaterialsResponse = {
         data: matches.slice((page - 1) * pageSize, page * pageSize),
         page,
@@ -103,19 +103,19 @@ describe("Materials page filters", () => {
   it("selecting types puts them in the URL and the request, back on page 1", async () => {
     const { requests } = serveApi();
     const user = userEvent.setup();
-    const { router } = renderAt("/?page=2&pageSize=10");
+    const { router } = renderAt("/?page=2&pageSize=25");
     await screen.findByText("30 materials");
 
     await choose(user, "Type", "Tool");
 
     expect(await screen.findByText("10 materials")).toBeInTheDocument();
-    expect(search(router)).toBe("?type=TOOL&pageSize=10");
-    expect(requests.at(-1)).toBe("type=TOOL&sort=updatedAt&order=desc&page=1&pageSize=10");
+    expect(search(router)).toBe("?type=TOOL&pageSize=25");
+    expect(requests.at(-1)).toBe("type=TOOL&sort=updatedAt&order=desc&page=1&pageSize=25");
 
     await choose(user, "Type", "Spare Part");
 
     expect(await screen.findByText("30 materials")).toBeInTheDocument();
-    expect(search(router)).toBe("?type=TOOL,SPARE_PART&pageSize=10");
+    expect(search(router)).toBe("?type=TOOL,SPARE_PART&pageSize=25");
   });
 
   it("combines status and plant filters, with plants offered from the API by code", async () => {
@@ -131,7 +131,7 @@ describe("Materials page filters", () => {
     expect(await screen.findByText("0 materials")).toBeInTheDocument();
     expect(search(router)).toBe("?status=ACTIVE&plant=2000");
     expect(requests.at(-1)).toBe(
-      "status=ACTIVE&plant=2000&sort=updatedAt&order=desc&page=1&pageSize=25",
+      "status=ACTIVE&plant=2000&sort=updatedAt&order=desc&page=1&pageSize=10",
     );
   });
 
@@ -165,7 +165,7 @@ describe("Materials page filters", () => {
 
     expect(await screen.findByText("15 materials")).toBeInTheDocument();
     expect(requests).toEqual([
-      "type=TOOL,SPARE_PART&status=OBSOLETE&plant=2000&sort=updatedAt&order=desc&page=1&pageSize=25",
+      "type=TOOL,SPARE_PART&status=OBSOLETE&plant=2000&sort=updatedAt&order=desc&page=1&pageSize=10",
     ]);
     const user = userEvent.setup();
     expect(await selected(user, "Type")).toEqual(["Spare Part", "Tool"]);
@@ -176,14 +176,14 @@ describe("Materials page filters", () => {
   it("clears one filter on its own, back on page 1", async () => {
     const { requests } = serveApi();
     const user = userEvent.setup();
-    const { router } = renderAt("/?type=TOOL&status=ACTIVE&page=2&pageSize=10");
+    const { router } = renderAt("/?type=TOOL&status=ACTIVE&page=2&pageSize=25");
     await screen.findByText("5 materials");
 
     await user.click(within(filters()).getByRole("button", { name: "Clear Type filter" }));
 
     expect(await screen.findByText("15 materials")).toBeInTheDocument();
-    expect(search(router)).toBe("?status=ACTIVE&pageSize=10");
-    expect(requests.at(-1)).toBe("status=ACTIVE&sort=updatedAt&order=desc&page=1&pageSize=10");
+    expect(search(router)).toBe("?status=ACTIVE&pageSize=25");
+    expect(requests.at(-1)).toBe("status=ACTIVE&sort=updatedAt&order=desc&page=1&pageSize=25");
     expect(await selected(user, "Type")).toEqual([]);
     expect(await selected(user, "Status")).toEqual(["Active"]);
   });
@@ -192,15 +192,15 @@ describe("Materials page filters", () => {
     const { requests } = serveApi();
     const user = userEvent.setup();
     const { router } = renderAt(
-      "/?q=material&type=TOOL&status=ACTIVE&plant=1000&sort=materialNumber&order=asc&pageSize=10",
+      "/?q=material&type=TOOL&status=ACTIVE&plant=1000&sort=materialNumber&order=asc&pageSize=25",
     );
     await screen.findByText("5 materials");
 
     await user.click(screen.getByRole("button", { name: "Clear all" }));
 
     expect(await screen.findByText("30 materials")).toBeInTheDocument();
-    expect(search(router)).toBe("?sort=materialNumber&order=asc&pageSize=10");
-    expect(requests.at(-1)).toBe("sort=materialNumber&order=asc&page=1&pageSize=10");
+    expect(search(router)).toBe("?sort=materialNumber&order=asc&pageSize=25");
+    expect(requests.at(-1)).toBe("sort=materialNumber&order=asc&page=1&pageSize=25");
     expect(screen.getByRole("textbox", { name: "Search materials" })).toHaveValue("");
     for (const label of ["Type", "Status", "Plant"])
       expect(await selected(user, label)).toEqual([]);
@@ -210,7 +210,7 @@ describe("Materials page filters", () => {
   it("shows Clear all only once a search or filter is applied", async () => {
     serveApi();
     const user = userEvent.setup();
-    renderAt("/?sort=materialNumber&pageSize=10");
+    renderAt("/?sort=materialNumber&pageSize=25");
     await screen.findByText("30 materials");
 
     expect(screen.queryByRole("button", { name: "Clear all" })).not.toBeInTheDocument();

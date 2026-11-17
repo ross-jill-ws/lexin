@@ -1,0 +1,37 @@
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--lamp);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lamp) 18%, transparent);
+}
+
+.status[data-status="ACTIVE"] {
+  --lamp: var(--mr-ok);
+}
+
+.status[data-status="ACTIVE"]::before {
+  border-radius: 50%;
+}
+
+.status[data-status="OBSOLETE"] {
+  --lamp: var(--mr-bad);
+  color: var(--mr-ink-soft);
+}
+
+.status[data-status="PENDING_REVIEW"] {
+  --lamp: var(--mr-wait);
+}
+
+.status[data-status="PENDING_REVIEW"]::before {
+  transform: rotate(45deg) scale(0.85);
+}

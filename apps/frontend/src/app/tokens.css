@@ -1,0 +1,46 @@
+:root {
+  --mr-paper: #f3efe6;
+  --mr-sheet: #fffdf8;
+  --mr-ink: #16181b;
+  --mr-ink-soft: #535a63;
+  --mr-rule: #e2dccf;
+  --mr-amber: #f2a900;
+  --mr-amber-wash: #fff4d1;
+  --mr-ok: #1f8a5b;
+  --mr-bad: #b8452c;
+  --mr-wait: #c98a00;
+  --mr-hazard: repeating-linear-gradient(-45deg, var(--mr-amber) 0 10px, var(--mr-ink) 10px 20px);
+  --mr-shadow: 0 1px 0 var(--mr-rule), 0 12px 32px -18px rgb(22 24 27 / 0.35);
+}
+
+body {
+  background-color: var(--mr-paper);
+  /* Faint drafting grid: the ledger sits on graph paper. */
+  background-image:
+    linear-gradient(rgb(22 24 27 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(22 24 27 / 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--mr-ink);
+}
+
+@keyframes mr-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every component rule. */
+    animation: none !important;
+    /* biome-ignore lint/complexity/noImportantStyles: as above. */
+    transition: none !important;
+  }
+}

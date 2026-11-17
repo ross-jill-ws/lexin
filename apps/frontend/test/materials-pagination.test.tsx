@@ -33,7 +33,7 @@ function serveMaterials(total: number) {
       const params = new URL(request.url).searchParams;
       requests.push(params.toString());
       const page = Number(params.get("page") ?? 1);
-      const pageSize = Number(params.get("pageSize") ?? 25);
+      const pageSize = Number(params.get("pageSize") ?? 10);
       const body: MaterialsResponse = {
         data: all.slice((page - 1) * pageSize, page * pageSize),
         page,
@@ -59,11 +59,11 @@ describe("Materials page pagination", () => {
   it("loads the page and page size named in the URL", async () => {
     const requests = serveMaterials(120);
 
-    renderAt("/?page=3&pageSize=10");
+    renderAt("/?page=3&pageSize=25");
 
-    expect(await screen.findByRole("cell", { name: "MAT-000021" })).toBeInTheDocument();
-    expect(shownMaterialNumbers()).toHaveLength(10);
-    expect(requests).toEqual(["sort=updatedAt&order=desc&page=3&pageSize=10"]);
+    expect(await screen.findByRole("cell", { name: "MAT-000051" })).toBeInTheDocument();
+    expect(shownMaterialNumbers()).toHaveLength(25);
+    expect(requests).toEqual(["sort=updatedAt&order=desc&page=3&pageSize=25"]);
   });
 
   it("moves to the next page and to a chosen page, keeping the URL in step", async () => {
@@ -74,12 +74,12 @@ describe("Materials page pagination", () => {
 
     await user.click(screen.getByRole("button", { name: "Next page" }));
 
-    expect(await screen.findByRole("cell", { name: "MAT-000026" })).toBeInTheDocument();
+    expect(await screen.findByRole("cell", { name: "MAT-000011" })).toBeInTheDocument();
     expect(search(router)).toBe("?page=2");
 
     await user.click(screen.getByRole("button", { name: "5" }));
 
-    expect(await screen.findByRole("cell", { name: "MAT-000101" })).toBeInTheDocument();
+    expect(await screen.findByRole("cell", { name: "MAT-000041" })).toBeInTheDocument();
     expect(search(router)).toBe("?page=5");
   });
 
@@ -87,7 +87,7 @@ describe("Materials page pagination", () => {
     serveMaterials(120);
     const user = userEvent.setup();
     const { router } = renderAt("/?page=2");
-    await screen.findByRole("cell", { name: "MAT-000026" });
+    await screen.findByRole("cell", { name: "MAT-000011" });
 
     await user.click(screen.getByRole("button", { name: "Previous page" }));
 
@@ -99,7 +99,7 @@ describe("Materials page pagination", () => {
     const requests = serveMaterials(120);
     const user = userEvent.setup();
     const { router } = renderAt("/?page=3");
-    await screen.findByRole("cell", { name: "MAT-000051" });
+    await screen.findByRole("cell", { name: "MAT-000021" });
 
     await user.selectOptions(screen.getByRole("combobox", { name: "Rows per page" }), "50");
 
@@ -115,7 +115,7 @@ describe("Materials page pagination", () => {
 
     const picker = await screen.findByRole("combobox", { name: "Rows per page" });
 
-    expect(picker).toHaveValue("25");
+    expect(picker).toHaveValue("10");
     expect([...(picker as HTMLSelectElement).options].map((o) => o.value)).toEqual([
       "10",
       "25",
@@ -125,10 +125,10 @@ describe("Materials page pagination", () => {
   });
 
   it.each([
-    ["/?page=abc&pageSize=7", "MAT-000001", 25],
-    ["/?page=0&pageSize=-10", "MAT-000001", 25],
+    ["/?page=abc&pageSize=7", "MAT-000001", 10],
+    ["/?page=0&pageSize=-10", "MAT-000001", 10],
     ["/?page=2.5&pageSize=50", "MAT-000001", 50],
-    ["/?page=2&pageSize=lots", "MAT-000026", 25],
+    ["/?page=2&pageSize=lots", "MAT-000011", 10],
   ])("falls back to defaults for the malformed parts of %s", async (url, first, rows) => {
     const requests = serveMaterials(120);
 
@@ -146,14 +146,15 @@ describe("Materials page pagination", () => {
     const { router } = renderAt("/");
     await screen.findByRole("cell", { name: "MAT-000001" });
     await user.click(screen.getByRole("button", { name: "Next page" }));
-    await screen.findByRole("cell", { name: "MAT-000026" });
-    await user.selectOptions(screen.getByRole("combobox", { name: "Rows per page" }), "10");
-    await waitFor(() => expect(shownMaterialNumbers()).toHaveLength(10));
+    await screen.findByRole("cell", { name: "MAT-000011" });
+    await user.selectOptions(screen.getByRole("combobox", { name: "Rows per page" }), "25");
+    await waitFor(() => expect(shownMaterialNumbers()).toHaveLength(25));
 
     await router.navigate(-1);
 
-    expect(await screen.findByRole("cell", { name: "MAT-000026" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Rows per page" })).toHaveValue("25");
+    await waitFor(() => expect(shownMaterialNumbers()).toHaveLength(10));
+    expect(shownMaterialNumbers()[0]).toBe("MAT-000011");
+    expect(screen.getByRole("combobox", { name: "Rows per page" })).toHaveValue("10");
 
     await router.navigate(-1);
 
@@ -161,7 +162,7 @@ describe("Materials page pagination", () => {
 
     await router.navigate(1);
 
-    expect(await screen.findByRole("cell", { name: "MAT-000026" })).toBeInTheDocument();
+    expect(await screen.findByRole("cell", { name: "MAT-000011" })).toBeInTheDocument();
     expect(search(router)).toBe("?page=2");
   });
 
@@ -170,7 +171,7 @@ describe("Materials page pagination", () => {
 
     renderAt("/?page=4");
 
-    await screen.findByRole("cell", { name: "MAT-000076" });
+    await screen.findByRole("cell", { name: "MAT-000031" });
     expect(screen.getByRole("button", { name: "4" })).toHaveAttribute("aria-current", "page");
   });
 
@@ -186,7 +187,7 @@ describe("Materials page pagination", () => {
     await user.click(screen.getByRole("button", { name: "Go to page 3" }));
 
     expect(await screen.findByRole("cell", { name: "MAT-000051" })).toBeInTheDocument();
-    expect(search(router)).toBe("?page=3");
+    expect(search(router)).toBe("?page=3&pageSize=25");
     expect(screen.queryByText(/doesn't exist/)).not.toBeInTheDocument();
   });
 
