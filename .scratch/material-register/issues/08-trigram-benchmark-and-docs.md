@@ -46,3 +46,5 @@
 - `VACUUM ANALYZE` is essential. Right after the bulk insert the GIN pending lists make the planner cost trigram scans so high that it picks a seq scan even for 12 matches in 20k rows. The README explains this.
 - The quickstart check ran `db:migrate` + `db:seed` rather than `db:setup`, because a second compose project from the copied folder would clash on port 5433. `db:up` was checked separately against the running stack, where it waited until healthy. On this machine Vite fell back from 5173 to 5180 (5173 was taken), as noted in ticket 01. The README mentions the fallback.
 - The README's code-review and e2e steps describe the workflow's later stages and carry TODOs, because ticket 09 hasn't run yet.
+
+**2026-11-18. Superseded.** The brief allows at most one optional extra, so the user chose the detail view and dropped "faster search". The trigram indexes, `pg_trgm`, `db:bench` and its README section are gone, and the init migration was regenerated without them. Separately, to keep one 5,000-row database, the `lexin_test` database and every DB-backed backend test were removed. Backend tests are now the seed-generator unit tests only.

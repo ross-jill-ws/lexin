@@ -1,5 +1,5 @@
 {
-  "id": "7da5c3e0-fac1-4474-af1b-a9c8424d268b",
+  "id": "80386437-b7f0-465c-8663-c3d261ea9343",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -121,54 +121,6 @@
         }
       },
       "indexes": {
-        "materials_material_number_trgm_idx": {
-          "name": "materials_material_number_trgm_idx",
-          "columns": [
-            {
-              "expression": "material_number",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "gin_trgm_ops"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "gin",
-          "with": {}
-        },
-        "materials_description_trgm_idx": {
-          "name": "materials_description_trgm_idx",
-          "columns": [
-            {
-              "expression": "description",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "gin_trgm_ops"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "gin",
-          "with": {}
-        },
-        "materials_mpn_trgm_idx": {
-          "name": "materials_mpn_trgm_idx",
-          "columns": [
-            {
-              "expression": "manufacturer_part_number",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "gin_trgm_ops"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "gin",
-          "with": {}
-        },
         "materials_plant_id_idx": {
           "name": "materials_plant_id_idx",
           "columns": [

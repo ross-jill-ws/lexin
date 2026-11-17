@@ -1,5 +1,3 @@
--- Trigram matching for the search indexes below (ILIKE %term%).
-CREATE EXTENSION IF NOT EXISTS pg_trgm;--> statement-breakpoint
 CREATE TYPE "public"."material_status" AS ENUM('ACTIVE', 'OBSOLETE', 'PENDING_REVIEW');--> statement-breakpoint
 CREATE TYPE "public"."material_type" AS ENUM('SPARE_PART', 'CONSUMABLE', 'RAW_MATERIAL', 'TOOL');--> statement-breakpoint
 CREATE TYPE "public"."unit_of_measure" AS ENUM('EA', 'BOX', 'KG', 'L', 'M', 'SET', 'PK');--> statement-breakpoint
@@ -35,9 +33,6 @@ CREATE TABLE "plants" (
 --> statement-breakpoint
 ALTER TABLE "materials" ADD CONSTRAINT "materials_manufacturer_id_manufacturers_id_fk" FOREIGN KEY ("manufacturer_id") REFERENCES "public"."manufacturers"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "materials" ADD CONSTRAINT "materials_plant_id_plants_id_fk" FOREIGN KEY ("plant_id") REFERENCES "public"."plants"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "materials_material_number_trgm_idx" ON "materials" USING gin ("material_number" gin_trgm_ops);--> statement-breakpoint
-CREATE INDEX "materials_description_trgm_idx" ON "materials" USING gin ("description" gin_trgm_ops);--> statement-breakpoint
-CREATE INDEX "materials_mpn_trgm_idx" ON "materials" USING gin ("manufacturer_part_number" gin_trgm_ops);--> statement-breakpoint
 CREATE INDEX "materials_plant_id_idx" ON "materials" USING btree ("plant_id");--> statement-breakpoint
 CREATE INDEX "materials_manufacturer_id_idx" ON "materials" USING btree ("manufacturer_id");--> statement-breakpoint
 CREATE INDEX "materials_material_type_idx" ON "materials" USING btree ("material_type");--> statement-breakpoint

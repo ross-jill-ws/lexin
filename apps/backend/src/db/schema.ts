@@ -50,10 +50,6 @@ export const materials = pgTable(
   },
   (t) => [
     check("materials_quantity_on_hand_non_negative", sql`${t.quantityOnHand} >= 0`),
-    // Search: trigram GIN indexes make ILIKE '%term%' index-assisted.
-    index("materials_material_number_trgm_idx").using("gin", t.materialNumber.op("gin_trgm_ops")),
-    index("materials_description_trgm_idx").using("gin", t.description.op("gin_trgm_ops")),
-    index("materials_mpn_trgm_idx").using("gin", t.manufacturerPartNumber.op("gin_trgm_ops")),
     // Postgres does not index foreign keys automatically.
     index("materials_plant_id_idx").on(t.plantId),
     index("materials_manufacturer_id_idx").on(t.manufacturerId),

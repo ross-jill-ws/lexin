@@ -3,9 +3,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   DATABASE_URL: z.url(),
-  TEST_DATABASE_URL: z.url(),
   PORT: z.coerce.number().int().positive().default(3001),
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -31,6 +29,3 @@ function loadEnv(): Env {
 }
 
 export const env = loadEnv();
-
-/** Tests always run against the test database, never the app database. */
-export const databaseUrl = env.NODE_ENV === "test" ? env.TEST_DATABASE_URL : env.DATABASE_URL;

@@ -15,8 +15,7 @@
     "db:generate": "pnpm --filter @material-register/backend db:generate",
     "db:migrate": "pnpm --filter @material-register/backend db:migrate",
     "db:seed": "pnpm --filter @material-register/backend db:seed",
-    "db:setup": "pnpm db:up && pnpm db:migrate && pnpm db:seed",
-    "db:bench": "pnpm --filter @material-register/backend db:bench"
+    "db:setup": "pnpm db:up && pnpm db:migrate && pnpm db:seed"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.8"

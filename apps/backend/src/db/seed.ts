@@ -2,12 +2,12 @@
  * Loads the deterministic Material Register seed into a database.
  *
  *   pnpm db:seed                                   # 5,000 materials into DATABASE_URL
- *   pnpm db:seed --count 200000 --database-url ... # e.g. a larger benchmark dataset
+ *   pnpm db:seed --count 200000 --database-url ... # e.g. a larger dataset
  */
 import { parseArgs } from "node:util";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { databaseUrl } from "../env";
+import { env } from "../env";
 import { manufacturers, materials, plants } from "./schema";
 import { generateSeed, type SeedOptions } from "./seed/generate";
 
@@ -68,7 +68,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   if (count !== undefined && (!Number.isInteger(count) || count < 0)) {
     throw new Error(`--count must be a non-negative integer, got "${values.count}"`);
   }
-  const counts = await seedDatabase(values["database-url"] ?? databaseUrl, { count });
+  const counts = await seedDatabase(values["database-url"] ?? env.DATABASE_URL, { count });
   console.log(
     `Seeded ${counts.plants} plants, ${counts.manufacturers} manufacturers, ${counts.materials} materials.`,
   );
