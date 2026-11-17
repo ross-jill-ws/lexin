@@ -1,5 +1,5 @@
 import { Alert, Button, Skeleton, Stack, Text, Title } from "@mantine/core";
-import { useLocation, useParams } from "react-router";
+import { Navigate, useLocation, useParams } from "react-router";
 import { ApiClientError, ApiRequestError } from "../../api/client";
 import type { ListReturnState } from "../materials/MaterialLink";
 import { BackToRegister } from "../not-found/BackToRegister";
@@ -10,10 +10,16 @@ import { useMaterial } from "./useMaterial";
 
 /** /materials/:materialNumber: one material's full record. */
 export function MaterialDetailPage() {
-  const { materialNumber = "" } = useParams();
+  const { materialNumber: param = "" } = useParams();
   const location = useLocation();
   const listSearch = (location.state as ListReturnState | null)?.listSearch ?? "";
+  // Material numbers are upper case; the API matches any case, but the page shows one form.
+  const materialNumber = param.trim().toUpperCase();
   const { data: material, error, isFetching, refetch } = useMaterial(materialNumber);
+
+  if (materialNumber !== param) {
+    return <Navigate replace to={`/materials/${materialNumber}`} state={location.state} />;
+  }
 
   if (error instanceof ApiRequestError && error.status === 404) {
     return (

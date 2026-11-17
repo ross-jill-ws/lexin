@@ -220,6 +220,20 @@ describe("Materials page filters", () => {
     expect(await screen.findByRole("button", { name: "Clear all" })).toBeInTheDocument();
   });
 
+  it("shows the first selection and a +N count for the rest, so the toolbar stays one line", async () => {
+    serveApi();
+
+    renderAt("/?type=TOOL,SPARE_PART,CONSUMABLE");
+
+    await screen.findByText("30 materials");
+    const more = within(filters()).getByText("+2").closest("[title]");
+    expect(more).toHaveAttribute("title", "Also selected: Spare Part, Consumable");
+    const pills = more?.parentElement;
+    if (!pills) throw new Error("no pills list");
+    expect(within(pills).getByText("Tool")).toBeVisible();
+    expect(within(pills).queryByText("Spare Part")).not.toBeInTheDocument();
+  });
+
   it("fetches the plants once, however often the filters change", async () => {
     const { plantsRequests } = serveApi();
     const user = userEvent.setup();

@@ -58,7 +58,9 @@ export function MaterialsTable({ materials, sort, onSortChange }: Props) {
   });
 
   return (
-    <Table.ScrollContainer minWidth={TABLE_MIN_WIDTH}>
+    // "auto" keeps the horizontal scrollbar visible whenever the table overflows (narrow
+    // windows), so it's obvious more columns sit to the right; wide windows show none.
+    <Table.ScrollContainer minWidth={TABLE_MIN_WIDTH} scrollAreaProps={{ type: "auto" }}>
       <Table className={classes.table} verticalSpacing={0} horizontalSpacing="sm">
         <Table.Thead>
           {table.getHeaderGroups().map((group) => (

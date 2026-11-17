@@ -6,7 +6,7 @@ type Props = { page: number; totalPages: number; onGoToPage: (page: number) => v
 export function PageOutOfRange({ page, totalPages, onGoToPage }: Props) {
   const lastPage = Math.max(totalPages, 1);
   return (
-    <Alert color="yellow" title="Page not found">
+    <Alert color="yellow" title="Past the last page">
       <Stack align="flex-start" gap="sm">
         <Text size="sm">
           {`Page ${page} doesn't exist. `}

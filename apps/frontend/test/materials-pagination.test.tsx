@@ -183,6 +183,9 @@ describe("Materials page pagination", () => {
     expect(
       await screen.findByText("Page 9 doesn't exist. These results only go up to page 3."),
     ).toBeInTheDocument();
+    // Distinct from the "Page not found" 404 route.
+    expect(screen.getByText("Past the last page")).toBeInTheDocument();
+    expect(screen.queryByText("Page not found")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Go to page 3" }));
 

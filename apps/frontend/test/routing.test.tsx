@@ -112,6 +112,22 @@ describe("routing", () => {
     expect(router.state.location.search).toBe("?q=hose&status=PENDING_REVIEW");
   });
 
+  it("normalises a lowercase material number in the URL to the canonical one", async () => {
+    const { detailRequests } = serveApi();
+
+    const { router } = renderAt("/materials/mat-004242");
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Hose, hydraulic, 1/2in, 2-wire braid",
+      }),
+    ).toBeVisible();
+    expect(router.state.location.pathname).toBe("/materials/MAT-004242");
+    expect(screen.queryByText(/mat-004242/)).not.toBeInTheDocument();
+    expect(detailRequests).toEqual(["MAT-004242"]);
+  });
+
   it("explains when no material has the number in the URL", async () => {
     serveApi();
 
