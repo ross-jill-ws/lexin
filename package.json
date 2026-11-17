@@ -1,0 +1,24 @@
+{
+  "name": "material-register",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.20.0",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @material-register/backend --filter @material-register/frontend dev",
+    "build": "pnpm -r build",
+    "start": "pnpm --parallel --filter @material-register/backend --filter @material-register/frontend start",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "db:up": "docker compose up -d --wait",
+    "db:generate": "pnpm --filter @material-register/backend db:generate",
+    "db:migrate": "pnpm --filter @material-register/backend db:migrate",
+    "db:seed": "pnpm --filter @material-register/backend db:seed",
+    "db:setup": "pnpm db:up && pnpm db:migrate && pnpm db:seed",
+    "db:bench": "pnpm --filter @material-register/backend db:bench"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.8"
+  }
+}
